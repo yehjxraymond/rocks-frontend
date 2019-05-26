@@ -1,5 +1,8 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import Link from "next/link";
+import { addedNewRock } from "../src/reducers";
 
 const validateForm = ({ name, weight, lat, lng }) => {
   const errors = {};
@@ -24,7 +27,15 @@ class Page extends Component {
   }
 
   handleSubmit(val) {
-    alert(JSON.stringify(val));
+    const { name, weight, image, engraving, lat, lng } = val;
+    this.props.addedNewRock({
+      name,
+      weight,
+      image,
+      engraving,
+      lat,
+      lng
+    });
   }
 
   render() {
@@ -72,9 +83,21 @@ class Page extends Component {
             </Form>
           )}
         </Formik>
+        <Link href="/">Home</Link>
       </div>
     );
   }
 }
 
-export default Page;
+const mapStateToProps = store => ({
+  rocks: store.rocks
+});
+
+const mapDispatchToProps = dispatch => ({
+  addedNewRock: payload => dispatch(addedNewRock(payload))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Page);
