@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Link from "next/link";
 import { addedNewRock } from "../src/reducers";
+import Axios from "axios";
+import Router from "next/router";
 
 const validateForm = ({ name, weight, lat, lng }) => {
   const errors = {};
@@ -28,14 +30,20 @@ class Page extends Component {
 
   handleSubmit(val) {
     const { name, weight, image, engraving, lat, lng } = val;
-    this.props.addedNewRock({
-      name,
-      weight,
-      image,
-      engraving,
-      lat,
-      lng
-    });
+
+    const rock = {
+      name
+    };
+    rock.weight = Number(weight);
+    if (image) rock.image = image;
+    if (engraving) rock.engraving = engraving;
+    if (lat && lng) rock.location = { lat: Number(lat), lng: Number(lng) };
+
+    // Post new rock and redirect to home on success
+    Axios.post("http://localhost:8080/api/rocks/", rock)
+      .then(res => res.data)
+      .then(this.props.addedNewRock)
+      .then(() => Router.push("/"));
   }
 
   render() {
@@ -83,7 +91,9 @@ class Page extends Component {
             </Form>
           )}
         </Formik>
-        <Link href="/"><a>Home</a></Link>
+        <Link href="/">
+          <a>Home</a>
+        </Link>
       </div>
     );
   }
