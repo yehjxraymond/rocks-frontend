@@ -1,5 +1,6 @@
 // https://nextjs.org/docs/#custom-document
 import Document, { Html, Head, Main, NextScript } from "next/document";
+import NavBar from "../src/components/NavBar";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -34,6 +35,7 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
+          <NavBar />
           <Main />
           <NextScript />
         </body>
