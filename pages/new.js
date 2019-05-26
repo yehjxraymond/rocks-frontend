@@ -83,7 +83,7 @@ class Page extends Component {
             </Form>
           )}
         </Formik>
-        <Link href="/">Home</Link>
+        <Link href="/"><a>Home</a></Link>
       </div>
     );
   }
