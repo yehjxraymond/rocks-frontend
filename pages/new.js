@@ -1,87 +1,77 @@
 import React, { Component } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+
+const validateForm = ({ name, weight, lat, lng }) => {
+  const errors = {};
+  if (!name) errors.name = "Required";
+  if (!weight) errors.weight = "Required";
+  if (Number(weight) === NaN) errors.weight = "Weight must be a number";
+  if (lat && !(Number(lat) < 90 && Number(lat) > -90))
+    errors.lat = "Latitude must be a number between -90 to 90";
+  if (lng && !(Number(lng) < 180 && Number(lng) > -180))
+    errors.lng = "Latitude must be a number between -180 to 180";
+  if ((lat && !lng) || (!lat && lng)) {
+    errors.lat = "Both latitutde and longitude must be present or absent";
+    errors.lng = "Both latitutde and longitude must be present or absent";
+  }
+  return errors;
+};
 
 class Page extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      name: "",
-      weight: "",
-      engraving: "",
-      lat: "",
-      lng: ""
-    };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit() {
-    const { name, weight, engraving, lat, lng } = this.state;
-    alert(
-      JSON.stringify({
-        name,
-        weight,
-        engraving,
-        lat,
-        lng
-      })
-    );
+  handleSubmit(val) {
+    alert(JSON.stringify(val));
   }
 
   render() {
-    const { name, weight, engraving, lat, lng } = this.state;
     return (
       <div className="container">
-        <form onSubmit={this.handleSubmit}>
-          <div>
-            <input
-              type="text"
-              value={name}
-              onChange={e => {
-                this.setState({ name: e.target.value });
-              }}
-              placeholder="name"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              value={weight}
-              onChange={e => {
-                this.setState({ weight: e.target.value });
-              }}
-              placeholder="weight"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              value={engraving}
-              onChange={e => {
-                this.setState({ engraving: e.target.value });
-              }}
-              placeholder="engraving"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              value={lat}
-              onChange={e => {
-                this.setState({ lat: e.target.value });
-              }}
-              placeholder="latitude"
-            />
-            <div />
-            <input
-              type="text"
-              value={lng}
-              onChange={e => {
-                this.setState({ lng: e.target.value });
-              }}
-              placeholder="longitude"
-            />
-          </div>
-          <button onClick={this.handleSubmit}>Submit</button>
-        </form>
+        <Formik
+          onSubmit={this.handleSubmit}
+          validate={validateForm}
+          initialValues={{
+            name: "",
+            weight: "",
+            image: "",
+            engraving: "",
+            lat: "",
+            lng: ""
+          }}
+        >
+          {({ values, handleSubmit, handleChange }) => (
+            <Form>
+              <div>
+                <ErrorMessage name="name" />
+                <Field type="text" name="name" placeholder="Name" />
+              </div>
+              <div>
+                <ErrorMessage name="weight" />
+                <Field type="text" name="weight" placeholder="Weight" />
+              </div>
+              <div>
+                <ErrorMessage name="image" />
+                <Field type="text" name="image" placeholder="Image" />
+              </div>
+              <div>
+                <ErrorMessage name="engraving" />
+                <Field type="text" name="engraving" placeholder="Engraving" />
+              </div>
+              <div>
+                <ErrorMessage name="lat" />
+                <Field type="text" name="lat" placeholder="Latitude" />
+              </div>
+              <div>
+                <ErrorMessage name="lng" />
+                <Field type="text" name="lng" placeholder="Longitude" />
+              </div>
+              <button type="submit">Submit</button>
+            </Form>
+          )}
+        </Formik>
       </div>
     );
   }
