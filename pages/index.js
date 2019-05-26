@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import Axios from "axios";
-import { loadedRocks } from "../src/reducers";
+import Router from "next/router";
 
 class Page extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.loadRocks = this.loadRocks.bind(this);
+    this.state = {
+      rocks: []
+    };
   }
 
   componentDidMount() {
@@ -16,13 +18,17 @@ class Page extends Component {
   loadRocks() {
     Axios.get("http://localhost:8080/api/rocks")
       .then(res => res.data)
-      .then(this.props.loadedRocks);
+      .then(rocks => this.setState({ rocks }));
   }
 
   render() {
-    const { rocks } = this.props;
+    const { rocks } = this.state;
     const renderedRocks = rocks.map((r, i) => (
-      <div key={i} className="col-4">
+      <div
+        key={i}
+        className="col-4"
+        onClick={() => Router.push(`/edit?id=${r.id}`)}
+      >
         {r.image && <img src={r.image} style={{ width: "100%" }} />}
         <div className="h3">{r.name}</div>
         <div>Weight: {r.weight}</div>
@@ -39,15 +45,4 @@ class Page extends Component {
   }
 }
 
-const mapStateToProps = store => ({
-  rocks: store.rocks
-});
-
-const mapDispatchToProps = dispatch => ({
-  loadedRocks: rocks => dispatch(loadedRocks(rocks))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Page);
+export default Page;
