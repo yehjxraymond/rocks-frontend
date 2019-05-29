@@ -53,6 +53,7 @@ class Page extends Component {
     return rock ? (
       <div className="container">
         <RockEditForm
+          formTitle="Edit Rock"
           initialValues={{
             name,
             weight,
