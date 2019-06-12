@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import Router from "next/router";
+import { BACKEND_URL } from "../src/config";
 
 class Page extends Component {
   constructor(props) {
@@ -16,7 +17,7 @@ class Page extends Component {
   }
 
   loadRocks() {
-    Axios.get("http://localhost:8080/api/rocks")
+    Axios.get(`${BACKEND_URL}/api/rocks`)
       .then(res => res.data)
       .then(rocks => this.setState({ rocks }));
   }

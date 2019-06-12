@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Axios from "axios";
 import Router from "next/router";
 import RockEditForm from "../src/components/RockEditForm";
+import { BACKEND_URL } from "../src/config";
 
 class Page extends Component {
   constructor(props) {
@@ -16,7 +17,7 @@ class Page extends Component {
   }
 
   componentDidMount() {
-    Axios.get(`http://localhost:8080/api/rocks/${this.props.id}`)
+    Axios.get(`${BACKEND_URL}/api/rocks/${this.props.id}`)
       .then(res => res.data)
       .then(rock => {
         this.setState({ prevRock: rock });
@@ -24,7 +25,7 @@ class Page extends Component {
   }
 
   handleDelete() {
-    Axios.delete(`http://localhost:8080/api/rocks/${this.props.id}`).then(() =>
+    Axios.delete(`${BACKEND_URL}/api/rocks/${this.props.id}`).then(() =>
       Router.push("/")
     );
   }
@@ -41,7 +42,7 @@ class Page extends Component {
     if (lat && lng) rock.location = { lat: Number(lat), lng: Number(lng) };
 
     // Edit rock and redirect to home on success
-    Axios.put(`http://localhost:8080/api/rocks/${this.props.id}`, rock).then(
+    Axios.put(`${BACKEND_URL}/api/rocks/${this.props.id}`, rock).then(
       () => Router.push("/")
     );
   }
